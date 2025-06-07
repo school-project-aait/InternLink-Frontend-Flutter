@@ -1,5 +1,3 @@
-
-
 import '../../../../core/utils/resource.dart';
 import '../entities/internship.dart';
 import '../repositories/internship_repository.dart';
@@ -15,6 +13,7 @@ class CreateInternshipUseCase {
     required String deadline,
     required String companyName,
     required int categoryId,
+    required String categoryName, // Added required parameter
   }) async {
     return await repository.createInternship(
       title: title,
@@ -22,6 +21,7 @@ class CreateInternshipUseCase {
       deadline: deadline,
       companyName: companyName,
       categoryId: categoryId,
+      categoryName: categoryName, // Pass through the categoryName
     );
   }
 }

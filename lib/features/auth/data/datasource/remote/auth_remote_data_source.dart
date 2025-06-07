@@ -16,7 +16,7 @@ class AuthRemoteDataSource {
       ApiEndpoints.login,
       data: {'email': email, 'password': password},
     );
-    // return User.fromJson(response.data);
+    // return User.fromJson(response.domain);
     final data = response.data;
 
     return User(

@@ -34,7 +34,7 @@ class LoginScreen extends ConsumerWidget {
             const SnackBar(content: Text('Login successful')),
           );
 
-          // Print user data to logcat
+          // Print user domain to logcat
           print('User logged in: ${user.toString()}');
 
           // Use GoRouter to navigate based on role

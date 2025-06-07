@@ -1,7 +1,7 @@
 class Internship {
   final int id;
   final String title;
-  final String? description;
+  final String description;
   final String deadline;
   final String companyName;
   final String categoryName;
@@ -13,7 +13,7 @@ class Internship {
   Internship({
     required this.id,
     required this.title,
-    this.description,
+    required this.description,
     required this.deadline,
     required this.companyName,
     required this.categoryName,

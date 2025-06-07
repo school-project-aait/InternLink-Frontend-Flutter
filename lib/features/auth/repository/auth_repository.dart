@@ -5,10 +5,10 @@ import 'package:dio/dio.dart';
 
 import '../../../core/exceptions/auth_exception.dart';
 
-// import '../data/data_sources/remote/auth_remote_data_source.dart';
+// import '../domain/data_sources/remote/auth_remote_data_source.dart';
 import '../data/datasource/remote/auth_remote_data_source.dart';
 import '../data/model/user_model.dart';
-// import '../data/models/user_model.dart';
+// import '../domain/models/user_model.dart';
 
 class AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;

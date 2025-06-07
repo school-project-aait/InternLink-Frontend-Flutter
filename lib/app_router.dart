@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internlink_flutter_application/features/admin/presenation/screens/add_internship_screen.dart';
+import 'package:internlink_flutter_application/features/student/presentation/screens/student_internship_list_screen.dart';
 import 'core/utils/secure_storage.dart';
 import 'features/admin/admin_dashboard.dart';
+import 'features/admin/domain/entities/internship.dart';
+import 'features/admin/presenation/screens/admin_dashboard.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/student/student_dashboard.dart';
 
@@ -18,11 +21,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/login',
     redirect: (context, state) async {
       if (!isInitialized) return null;
-
-      // Use state.uri.path instead of state.location
-      if (state.uri.path == '/') {
-        return '/login';
-      }
+      if (state.uri.path == '/') return '/login';
 
       final token = await secureStorage.getToken();
       if (token == null) return '/login';
@@ -47,21 +46,52 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/login',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: LoginScreen(),
+          child:  LoginScreen(),
         ),
       ),
       GoRoute(
         path: '/admin',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: AddInternshipScreen(),
+          child: const AdminDashboard(),
         ),
+        routes: [
+          GoRoute(
+            path: 'internships/add',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const AddEditInternshipScreen(),
+            ),
+          ),
+          GoRoute(
+            path: 'internships/edit/:id',
+            pageBuilder: (context, state) {
+              final internship = state.extra as Internship?;
+              if (internship == null) {
+                return MaterialPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    body: Center(child: Text('Internship data not available')),
+                  ),
+
+                );
+
+
+
+                }
+                  return MaterialPage(
+                  key: state.pageKey,
+                  child: AddEditInternshipScreen(internship: internship),
+                );
+              },
+          ),
+        ],
       ),
       GoRoute(
         path: '/student',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: StudentDashboard(),
+          child:  StudentInternshipListScreen(),
         ),
       ),
     ],
@@ -69,7 +99,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       key: state.pageKey,
       child: Scaffold(
         body: Center(
-          child: Text('Route not found: ${state.uri.path}'), // Updated here too
+          child: Text('Route not found: ${state.uri.path}'),
         ),
       ),
     ),
