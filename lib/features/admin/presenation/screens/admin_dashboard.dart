@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 
 import '../../domain/entities/internship.dart';
-import '../providers/internship_list_provider.dart';
+import '../providers/internship_list_notifier_provider.dart';
 import '../state/internship_list_state.dart';
 import '../widgets/internship_card.dart';
 

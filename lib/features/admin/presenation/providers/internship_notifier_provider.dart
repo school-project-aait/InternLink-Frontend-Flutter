@@ -130,40 +130,47 @@ class InternshipNotifier extends StateNotifier<InternshipState> {
 
     state = state.copyWith(isLoading: true, error: null, isSuccess: false);
 
-    final result = state.isEditing
-        ? await _updateInternshipUseCase(
-      id: state.internshipToEdit!.id,
-      title: state.title,
-      description: state.description,
-      deadline: state.deadline,
-      companyName: state.companyName,
-      categoryId: state.selectedCategoryId,
-      categoryName: selectedCategory.name,
-    )
-        : await _createInternshipUseCase(
-      title: state.title,
-      description: state.description,
-      deadline: state.deadline,
-      companyName: state.companyName,
-      categoryId: state.selectedCategoryId!,
-      categoryName: selectedCategory.name,
-    );
+    try {
+      final result = state.isEditing
+          ? await _updateInternshipUseCase(
+        id: state.internshipToEdit!.id,
+        title: state.title,
+        description: state.description,
+        deadline: state.deadline,
+        companyName: state.companyName,
+        categoryId: state.selectedCategoryId,
+        categoryName: selectedCategory.name,
+      )
+          : await _createInternshipUseCase(
+        title: state.title,
+        description: state.description,
+        deadline: state.deadline,
+        companyName: state.companyName,
+        categoryId: state.selectedCategoryId!,
+        categoryName: selectedCategory.name,
+      );
 
-    bool success = false;
-    if (result is ResourceSuccess<bool>) {
+      if (result is ResourceSuccess<bool>) {
+        state = state.copyWith(
+          isLoading: false,
+          isSuccess: true,
+        );
+        return true;
+      } else if (result is ResourceError<bool>) {
+        state = state.copyWith(
+          isLoading: false,
+          error: result.message,
+        );
+        return false;
+      }
+      return false;
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        isSuccess: true,
+        error: e.toString(),
       );
-      success = true;
-    } else if (result is ResourceError<bool>) {
-      state = state.copyWith(
-        isLoading: false,
-        error: result.message,
-      );
+      return false;
     }
-
-    return success;
   }
 
   void reset() {

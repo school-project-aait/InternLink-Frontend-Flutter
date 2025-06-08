@@ -6,7 +6,6 @@ import '../../domain/entities/internship.dart';
 import '../widgets/category_dropdown.dart';
 import '../widgets/form_buttons.dart';
 import '../widgets/form_section.dart';
-import '../widgets/header_component.dart';
 
 class AddEditInternshipScreen extends ConsumerStatefulWidget {
   final Internship? internship;
@@ -18,6 +17,8 @@ class AddEditInternshipScreen extends ConsumerStatefulWidget {
 }
 
 class _AddEditInternshipScreenState extends ConsumerState<AddEditInternshipScreen> {
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,108 +29,130 @@ class _AddEditInternshipScreenState extends ConsumerState<AddEditInternshipScree
     });
   }
 
+  Future<void> _handleSubmit() async {
+    if (_isSubmitting) return;
+
+    setState(() => _isSubmitting = true);
+
+    final success = await ref.read(internshipProvider.notifier).submit();
+
+    if (mounted) {
+      setState(() => _isSubmitting = false);
+
+      if (success) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ref.read(internshipProvider).isEditing
+                ? 'Internship updated successfully!'
+                : 'Internship created successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Wait briefly before popping the screen
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // ✅ This is the missing part
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(internshipProvider);
     final notifier = ref.read(internshipProvider.notifier);
 
-    if (state.isSuccess) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(state.isEditing
-                ? 'Internship updated successfully!'
-                : 'Internship created successfully!'),
-          ),
-        );
-        Navigator.of(context).pop();
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(state.isEditing ? 'Edit Internship' : 'Add Internship'),
       ),
-      body: state.isLoading && state.categories.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            if (state.error != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  state.error!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                if (state.error != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      state.error!,
+                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    ),
+                  ),
+                FormSection(
+                  title: 'Job Title',
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter Job Title',
+                    ),
+                    onChanged: notifier.updateTitle,
+                    initialValue: state.title,
+                  ),
                 ),
-              ),
-            FormSection(
-              title: 'Job Title',
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter Job Title',
+                FormSection(
+                  title: 'Company Name',
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter company name',
+                    ),
+                    onChanged: notifier.updateCompanyName,
+                    initialValue: state.companyName,
+                  ),
                 ),
-                onChanged: notifier.updateTitle,
-                initialValue: state.title,
-              ),
-            ),
-            FormSection(
-              title: 'Company Name',
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter company name',
+                FormSection(
+                  title: 'Requirements / Description',
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter Requirements or Description',
+                    ),
+                    maxLines: 5,
+                    onChanged: notifier.updateDescription,
+                    initialValue: state.description,
+                  ),
                 ),
-                onChanged: notifier.updateCompanyName,
-                initialValue: state.companyName,
-              ),
-            ),
-            FormSection(
-              title: 'Requirements / Description',
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter Requirements or Description',
+                FormSection(
+                  title: 'Deadline',
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter deadline (YYYY-MM-DD)',
+                    ),
+                    onChanged: notifier.updateDeadline,
+                    initialValue: state.deadline,
+                  ),
                 ),
-                maxLines: 5,
-                onChanged: notifier.updateDescription,
-                initialValue: state.description,
-              ),
-            ),
-            FormSection(
-              title: 'Deadline',
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter deadline (YYYY-MM-DD)',
+                FormSection(
+                  title: 'Category',
+                  child: CategoryDropdown(
+                    categories: state.categories,
+                    selectedCategoryId: state.selectedCategoryId,
+                    onCategorySelected: notifier.updateCategory,
+                    isLoading: state.isLoading,
+                  ),
                 ),
-                onChanged: notifier.updateDeadline,
-                initialValue: state.deadline,
-              ),
+                const SizedBox(height: 16),
+                FormButtons(
+                  onSave: _handleSubmit,
+                  onCancel: () {
+                    notifier.reset();
+                    Navigator.of(context).pop();
+                  },
+                  isEditing: state.isEditing,
+                  isLoading: _isSubmitting || state.isLoading,
+                ),
+              ],
             ),
-            FormSection(
-              title: 'Category',
-              child: CategoryDropdown(
-                categories: state.categories,
-                selectedCategoryId: state.selectedCategoryId,
-                onCategorySelected: notifier.updateCategory,
-                isLoading: state.isLoading,
-              ),
-            ),
-            const SizedBox(height: 16),
-            FormButtons(
-              onSave: () => notifier.submit(),
-              onCancel: () {
-                notifier.reset();
-                Navigator.of(context).pop();
-              },
-              isEditing: state.isEditing,
-              isLoading: state.isLoading,
-            ),
-          ],
-        ),
+          ),
+          if (_isSubmitting || (state.isLoading && state.categories.isEmpty))
+            const Center(child: CircularProgressIndicator()),
+        ],
       ),
     );
   }
