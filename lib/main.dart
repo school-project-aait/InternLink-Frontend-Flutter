@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internlink_frontend_flutter/features/auth/presentation/screens/signup_screen.dart';
 
 import 'features/auth/presentation/screens/login_screen.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: SignUpScreen(),
     );
   }
 }
