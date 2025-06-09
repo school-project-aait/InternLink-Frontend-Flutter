@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internlink_flutter_application/features/admin/presenation/screens/add_internship_screen.dart';
 import 'package:internlink_flutter_application/features/student/presentation/screens/student_internship_list_screen.dart';
+import 'package:internlink_flutter_application/features/student/presentation/screens/profile_sceen.dart';
 import 'core/utils/secure_storage.dart';
 import 'features/admin/admin_dashboard.dart';
 import 'features/admin/domain/entities/internship.dart';
@@ -18,35 +19,35 @@ final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(appInitializedProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/profile',
     redirect: (context, state) async {
       if (!isInitialized) return null;
-      if (state.uri.path == '/') return '/login';
+      if (state.uri.path == '/') return '/profile';
 
       final token = await secureStorage.getToken();
-      if (token == null) return '/login';
+      if (token == null) return '/profile';
 
       try {
         final role = _decodeTokenRole(token);
-        if (state.uri.path == '/login' && role != null) {
+        if (state.uri.path == '/profile' && role != null) {
           return role == 'admin' ? '/admin' : '/student';
         }
         return null;
       } catch (e) {
         await secureStorage.clearToken();
-        return '/login';
+        return '/profile';
       }
     },
     routes: [
       GoRoute(
         path: '/',
-        redirect: (context, state) => '/login',
+        redirect: (context, state) => '/profile',
       ),
       GoRoute(
-        path: '/login',
+        path: '/profile',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child:  LoginScreen(),
+          child:  ProfileScreen(),
         ),
       ),
       GoRoute(

@@ -1,47 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app_router.dart';
-import 'core/utils/secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:internlink_flutter_application/features/student/presentation/providers/user_provider.dart'; // 🔁 adjust to match your file path
+import 'package:internlink_flutter_application/features/student/presentation/screens/profile_sceen.dart'; // or MyApp if you have one
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Force fresh login during development
-  final storage = SecureStorage();
-  await storage.clearToken();
-
   runApp(
-    ProviderScope(
-      child: MyApp(),
+    ChangeNotifierProvider(
+      create: (_) => UserProvider(),
+      child: const MyApp(),
     ),
   );
 }
-
-class MyApp extends ConsumerStatefulWidget {
-  @override
-  ConsumerState<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends ConsumerState<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    // ✅ Initialize app router after first frame to trigger redirect
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(appInitializedProvider.notifier).state = true;
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+    return MaterialApp(
+      title: 'User Profile App',
+      home: const ProfileScreen(), // or any initial screen
     );
   }
 }
+

@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final addressController = TextEditingController();
 
   String selectedGender = 'Other';
+  
 
   @override
   void initState() {
