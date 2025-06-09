@@ -10,6 +10,7 @@ import 'features/admin/domain/entities/internship.dart';
 import 'features/admin/presenation/screens/admin_dashboard.dart';
 import 'features/admin/presenation/screens/status_determiner_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/screens/signup_screen.dart';
 import 'features/student/student_dashboard.dart';
 
 final appInitializedProvider = StateProvider<bool>((ref) => false);
@@ -19,30 +20,50 @@ final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(appInitializedProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/signup',
     redirect: (context, state) async {
       if (!isInitialized) return null;
       if (state.uri.path == '/') return '/login';
 
       final token = await secureStorage.getToken();
-      if (token == null) return '/login';
+      final publicRoutes = ['/login', '/signup'];
+      if (token == null) {
+        // Allow staying on public routes
+        if (publicRoutes.contains(state.uri.path)) {
+          return null;
+        }
+        return '/login';
+      }
+      // if (token == null) return '/login';
 
       try {
         final role = _decodeTokenRole(token);
-        if (state.uri.path == '/login' && role != null) {
+        // Redirect away from public routes when authenticated
+        if (publicRoutes.contains(state.uri.path)) {
           return role == 'admin' ? '/admin' : '/student';
         }
+        // if (state.uri.path == '/login' && role != null) {
+        //   return role == 'admin' ? '/admin' : '/student';
+        // }
         return null;
       } catch (e) {
         await secureStorage.clearToken();
-        return '/login';
+        return publicRoutes.contains(state.uri.path) ? null : '/login';
+        // return '/login';
       }
     },
     routes: [
       GoRoute(
-        path: '/',
-        redirect: (context, state) => '/login',
+        path: '/signup',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const SignUpScreen(),
+        ),
       ),
+      // GoRoute(
+      //   path: '/',
+      //   redirect: (context, state) => '/login',
+      // ),
       GoRoute(
         path: '/login',
         pageBuilder: (context, state) => MaterialPage(

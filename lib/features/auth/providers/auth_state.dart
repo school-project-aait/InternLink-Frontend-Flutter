@@ -1,10 +1,8 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../data/model/user_model.dart';
-
-
-// import '../domain/models/user_model.dart';
-
 part 'auth_state.freezed.dart';
 
 @freezed
