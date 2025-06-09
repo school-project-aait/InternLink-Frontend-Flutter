@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 
 class WaitingPage extends StatefulWidget {
-  const WaitingPage({Key? key}) : super(key: key);
+  final String nextRoute;
+  const WaitingPage({Key? key, required this.nextRoute}) : super(key: key);
 
   @override
   State<WaitingPage> createState() => _WaitingPageState();
@@ -33,6 +36,12 @@ class _WaitingPageState extends State<WaitingPage>
       parent: _controller,
       curve: const Interval(0.66, 1.0, curve: Curves.easeInOut),
     ));
+
+    Future.delayed(const Duration(seconds: 2),(){
+      if(mounted){
+        context.go(widget.nextRoute);
+      }
+    });
   }
 
   @override

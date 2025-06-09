@@ -7,109 +7,84 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Top bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Logo Text
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Intern",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Link",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Login Button
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      context.go('/login'); // Change to Navigator.push if not using GoRouter
-                    },
-                    child: const Text("Login"),
-                  ),
-                ],
+            // Top Left: InternLink Logo Title
+            Positioned(
+              top: 16,
+              left: 16,
+              child: RichText(
+                text: const TextSpan(
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(text: 'Intern', style: TextStyle(color: Colors.blue)),
+                    TextSpan(text: 'Link', style: TextStyle(color: Colors.black)),
+                  ],
+                ),
               ),
             ),
 
-            const Spacer(),
+            // Top Right: Login Button
+            Positioned(
+              top: 16,
+              right: 16,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.go('/waiting?next=login');
+                  Future.delayed(const Duration(seconds: 2), () {
+                    context.go('/waiting', extra: '/login');
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Login'),
+              ),
+            ),
 
-            // Center Logo
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+            // Center Content
+            Center(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Replace with your logo image
+                  // Logo Image
                   Image.asset(
                     'assets/images/logo.jpg',
+                    width: 150,
                     height: 150,
                   ),
-
                   const SizedBox(height: 24),
 
                   // Slogan
                   const Text(
-                    "Connecting Talent with Opportunity.",
+                    'Connecting Talent with Opportunity.',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   // Get Started Button
                   ElevatedButton(
+                    onPressed: () {
+                      context.go('/waiting?next=signup');
+                      Future.delayed(const Duration(seconds: 2), () {
+                        context.go('/waiting', extra: '/signup');
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
-                    onPressed: () {
-                      context.go('/signup'); // Change if not using GoRouter
-                    },
-                    child: const Text(
-                      "Get Started",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: const Text('Get Started'),
                   ),
                 ],
               ),
             ),
-
-            const Spacer(flex: 2),
           ],
         ),
       ),
