@@ -1,3 +1,5 @@
+import 'package:internlink_frontend_flutter/data/models/response/profile_dto.dart';
+
 // class ProfileRemoteDataSource {
 //   final Dio dio;
 
