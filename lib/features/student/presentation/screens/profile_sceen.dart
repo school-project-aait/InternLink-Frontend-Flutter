@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../domain/entities/user.dart';
+import '../providers/user_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,9 +21,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final contactController = TextEditingController();
   final addressController = TextEditingController();
 
-  String? selectedGender;
+  String selectedGender = 'Other';
 
-  bool isSubmitting = false;
+  @override
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.fetchUser().then((_) {
+      final user = userProvider.user;
+      if (user != null) {
+        nameController.text = user.fullName;
+        emailController.text = user.email;
+        dobController.text = user.dob;
+        contactController.text = user.contactNumber;
+        addressController.text = user.address;
+        selectedGender = user.gender;
+      }
+    });
+  }
 
   void _pickDate() async {
     final DateTime? picked = await showDatePicker(
@@ -35,52 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      setState(() => isSubmitting = true);
-
-      Future.delayed(const Duration(seconds: 1), () {
-        setState(() => isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated (simulated)')),
-        );
-      });
-    }
-  }
-
-  void _deleteAccount() {
-    showDialog(
-      context: context,
-      builder:
-          (_) => AlertDialog(
-            title: const Text('Confirm Delete'),
-            content: const Text(
-              'Are you sure you want to delete your account?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Account deleted (simulated)'),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -162,29 +137,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               obscureText: true,
                             ),
                             const SizedBox(height: 20),
-                            isSubmitting
-                                ? const CircularProgressIndicator()
-                                : ElevatedButton.icon(
-                                  onPressed: _submitForm,
-                                  icon: const Icon(
-                                    Icons.save,
-                                    color: Colors.blue,
-                                  ),
-                                  label: const Text(
-                                    'Update Profile',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size(
-                                      double.infinity,
-                                      50,
-                                    ),
-                                    side: const BorderSide(color: Colors.blue),
-                                  ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  final updatedUser = User(
+                                    fullName: nameController.text,
+                                    gender: selectedGender,
+                                    email: emailController.text,
+                                    dob: dobController.text,
+                                    contactNumber: contactController.text,
+                                    address: addressController.text,
+                                    password: passwordController.text,
+                                  );
+                                  userProvider.updateUser(updatedUser);
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Colors.blue,
+                              ),
+                              label: const Text(
+                                'Update Profile',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(
+                                  double.infinity,
+                                  50,
                                 ),
+                                side: const BorderSide(color: Colors.blue),
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             OutlinedButton.icon(
-                              onPressed: _deleteAccount,
+                              onPressed: () {
+                                 userProvider.deleteUser();
+                                },
                               icon: const Icon(Icons.delete, color: Colors.red),
                               label: const Text(
                                 'Delete Account',
@@ -257,7 +245,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           DropdownMenuItem(value: gender, child: Text(gender)),
                     )
                     .toList(),
-            onChanged: (value) => setState(() => selectedGender = value),
+            onChanged: (value) {
+                if (value != null) {
+                  setState(() => selectedGender = value);
+                }
+            },
+
             decoration: const InputDecoration(
               hintText: 'Enter gender',
               border: OutlineInputBorder(),
