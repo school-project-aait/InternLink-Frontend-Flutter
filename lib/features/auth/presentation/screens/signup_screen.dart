@@ -3,6 +3,8 @@
 // signup_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 // import 'package:internlink_frontend_flutter/core/utils/constants.dart';
 // import 'package:internlink_frontend_flutter/features/auth/presentation/controllers/auth_notifier.dart';
 // import 'package:internlink_frontend_flutter/features/auth/presentation/screens/login_screen.dart';
@@ -50,14 +52,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     // Handle signup success
     ref.listen<AuthState>(authProvider, (_, state) {
       state.whenOrNull(
-        authenticated: (user) {
+        success: (message) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration successful!')),
+            SnackBar(content: Text(message)),
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => LoginScreen()),
-          );
+          context.replace('/login');
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (_) => LoginScreen()),
+          // );
         },
         error: (message) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -112,10 +115,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               children: [
                 const Text("Already have an account?"),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => LoginScreen()),
-                  ),
+                  onPressed: () => context.replace('/login'),
+                  // onPressed: () => Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (_) => LoginScreen()),
+                  // ),
                   child: Text(
                     "Sign in",
                     style: TextStyle(color: Theme.of(context).primaryColor),
@@ -155,6 +159,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         isPassword: true),
                     const SizedBox(height: 16),
                     // Sign up button
+
                     ElevatedButton(
                       onPressed: authState.maybeWhen(
                         loading: () => null,
@@ -202,19 +207,47 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       keyboardType: keyboardType,
     );
   }
+   void _signUp() {
+    try {
+      // Call signUp and wait for completion
+      ref.read(authProvider.notifier).signUp(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        confirmPassword: _confirmPasswordController.text,
+        gender: _genderController.text,
+        dob: _dobController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+      );
 
-  void _signUp() {
-    ref.read(authProvider.notifier).signUp(
-      name: _nameController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-      confirmPassword: _confirmPasswordController.text,
-      gender: _genderController.text,
-      dob: _dobController.text,
-      phone: _phoneController.text,
-      address: _addressController.text,
-    );
+      // Only navigate if successful
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful!')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => LoginScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
   }
+
+  // void _signUp() {
+  //   ref.read(authProvider.notifier).signUp(
+  //     name: _nameController.text,
+  //     email: _emailController.text,
+  //     password: _passwordController.text,
+  //     confirmPassword: _confirmPasswordController.text,
+  //     gender: _genderController.text,
+  //     dob: _dobController.text,
+  //     phone: _phoneController.text,
+  //     address: _addressController.text,
+  //   );
+  // }
 }
 
 

@@ -48,8 +48,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         return null;
       } catch (e) {
         await secureStorage.clearToken();
-        return publicRoutes.contains(state.uri.path) ? null : '/login';
-        // return '/login';
+        return '/login';
       }
     },
     routes: [

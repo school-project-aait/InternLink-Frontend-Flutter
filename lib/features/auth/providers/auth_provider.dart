@@ -107,11 +107,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
         phone: phone,
         address: address,
       );
-      state = const AuthState.initial(); // You can show success message if needed
-    } on AuthException catch (e) {
-      state = AuthState.error(e.message);
+      state = AuthState.success("Registration successful!");
+      // state = const AuthState.initial(); // You can show success message if needed
+    // } on AuthException catch (e) {
+    //   state = const AuthState.success();
+      // state = AuthState.error(e.message);
     } catch (e) {
-      state = AuthState.error("Registration failed. Please try again.");
+      state = AuthState.error(e.toString());
+      // state = const AuthState.initial(); // Reset state
+      // rethrow; // Rethrow for UI handling
+
+      // state = AuthState.error("Registration failed. Please try again.");
     }
   }
 

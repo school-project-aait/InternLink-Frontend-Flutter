@@ -27,7 +27,7 @@ class AuthRemoteDataSource {
     );
   }
 
-  Future<User> signUp({
+  Future<void> signUp({
     required String name,
     required String email,
     required String password,
@@ -48,12 +48,12 @@ class AuthRemoteDataSource {
         'address': address,
       },
     );
-    final data = response.data;
-    return User(
-      id: data['user']['id'].toString(),
-      email: data['user']['email'],
-      role: data['user']['role'] ?? 'student',
-      token: data['token'],
-    );
+    // final data = response.data;
+    // return User(
+    //   id: data['user']['id'].toString(),
+    //   email: data['user']['email'],
+    //   role: data['user']['role'] ?? 'student',
+    //   token: data['token'],
+    // );
   }
 }
