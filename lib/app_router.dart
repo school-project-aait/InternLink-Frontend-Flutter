@@ -8,6 +8,7 @@ import 'core/utils/secure_storage.dart';
 import 'features/admin/admin_dashboard.dart';
 import 'features/admin/domain/entities/internship.dart';
 import 'features/admin/presenation/screens/admin_dashboard.dart';
+import 'features/admin/presenation/screens/status_determiner_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/student/student_dashboard.dart';
 
@@ -63,6 +64,24 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: const AddEditInternshipScreen(),
             ),
           ),
+          GoRoute(
+            path: 'applications/status',
+            pageBuilder: (context, state) {
+              final extras = state.extra as Map<String, VoidCallback>?;
+
+              final onLogout = extras?['onLogout'] ?? () {};
+              final onBackToDashboard = extras?['onBackToDashboard'] ?? () {};
+
+              return MaterialPage(
+                key: state.pageKey,
+                child: StatusDeterminerScreen(
+                  onLogout: onLogout,
+                  onBackToDashboard: onBackToDashboard,
+                ),
+              );
+            },
+          ),
+
           GoRoute(
             path: 'internships/edit/:id',
             pageBuilder: (context, state) {

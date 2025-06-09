@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/internship.dart';
 import '../providers/internship_list_notifier_provider.dart';
 import '../state/internship_list_state.dart';
+import '../widgets/header_component.dart';
 import '../widgets/internship_card.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
@@ -42,20 +43,86 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => notifier.loadInternships(),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(16, 48, 16, 0),
+              child:
+              HeaderComponent()
+            ),
+
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // space between title and button
+                    children: [
+                      // Admin Dashboard Title
+                      Text(
+                        'Admin Dashboard',
+                        style: TextStyle(
+                          color: Colors.blue[900],
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 17),
+                      // Review Applications button aligned right
+                      TextButton(
+                        onPressed: () {
+                          context.push('/admin/applications/status', extra: {
+                            'onLogout': () {
+                              context.go('/login'); // or any logout logic
+                            },
+                            'onBackToDashboard': () {
+                              context.go('/admin');
+                            },
+                          });
+                        },
+                        style: TextButton.styleFrom(
+                          side: BorderSide(color: Colors.blueAccent, width: 2),
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        child: const Text(
+                          'Review Applications',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Spacer(),
+              ],
+            ),
+            Expanded(child: _buildBody(state, notifier, context)),
+          ],
+        ),
       ),
-      body: _buildBody(state, notifier, context),
+      // body: _buildBody(state, notifier, context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/admin/internships/add'),
+        onPressed: () async {
+          final result = await context.push<bool>('/admin/internships/add');
+          if (result == true) {
+            ref.read(internshipListProvider.notifier).loadInternships();
+          }
+        },
         child: const Icon(Icons.add),
       ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => context.push('/admin/internships/add'),
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 
@@ -107,7 +174,18 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
         itemCount: state.internships.length,
         itemBuilder: (context, index) {
           final internship = state.internships[index];
-          return InternshipCard(
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: InternshipCard(
+              internship: internship,
+              onTap: () => _showInternshipDetails(context, internship),
+              onEdit: () => _navigateToEdit(context, internship),
+              onDelete: () => notifier.deleteInternship(internship.id),
+              isDeleting: state.isDeleting && state.deletingId == internship.id,
+            ),
+
+          );
+          child: InternshipCard(
             internship: internship,
             onTap: () => _showInternshipDetails(context, internship),
             onEdit: () => _navigateToEdit(context, internship),
@@ -149,11 +227,21 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
       ),
     );
   }
-
-  void _navigateToEdit(BuildContext context, Internship internship) {
-    context.push(
+  void _navigateToEdit(BuildContext context, Internship internship) async {
+    final result = await context.push<bool>(
       '/admin/internships/edit/${internship.id}',
       extra: internship,
     );
+
+    if (result == true) {
+      ref.read(internshipListProvider.notifier).loadInternships();
+    }
   }
+
+// void _navigateToEdit(BuildContext context, Internship internship) {
+  //   context.push(
+  //     '/admin/internships/edit/${internship.id}',
+  //     extra: internship,
+  //   );
+  // }
 }

@@ -6,4 +6,8 @@ class ApiEndpoints {
   static const String getDropdownData = '/internships/dropdown-data';
 
   static String editInternshipRoute(int id) => '$editInternship/$id'; // Correct: becomes '/internships/:id'
+  static const String getApplications = '/applications'; // GET all applications
+
+  // PATCH update application status by ID
+  static String updateApplicationStatus(int id) => '/applications/$id/status';
 }

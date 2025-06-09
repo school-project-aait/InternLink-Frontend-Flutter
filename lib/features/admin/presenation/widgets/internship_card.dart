@@ -61,24 +61,30 @@ class InternshipCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Company: ${internship.companyName}',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
+                // style: Theme.of(context).textTheme.bodyMedium,
               ),
+              const SizedBox(height: 8),
+              if (internship.description != null && internship.description!.isNotEmpty)
+                Text(
+                  'Requirements: ${internship.description!}',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Colors.grey[800],
+                  ),
+                ),
               const SizedBox(height: 8),
               Text(
                 'Deadline: ${internship.deadline}',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 8),
+
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(internship.status),
-                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       internship.status.toUpperCase(),
@@ -88,10 +94,10 @@ class InternshipCard extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Text(
-                    internship.createdAt,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  // Text(
+                  //   internship.createdAt,
+                  //   style: Theme.of(context).textTheme.bodySmall,
+                  // ),
                 ],
               ),
             ],
@@ -99,16 +105,5 @@ class InternshipCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'open':
-        return Colors.green;
-      case 'closed':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 }

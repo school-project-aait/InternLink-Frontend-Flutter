@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internlink_flutter_application/features/admin/presenation/widgets/header_component.dart';
 
 import '../../../../providers.dart';
 import '../../domain/entities/internship.dart';
@@ -66,15 +67,40 @@ class _AddEditInternshipScreenState extends ConsumerState<AddEditInternshipScree
     final notifier = ref.read(internshipProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(state.isEditing ? 'Edit Internship' : 'Add Internship'),
-      ),
+      // appBar: AppBar(
+      //   title: Text(state.isEditing ? 'Edit Internship' : 'Add Internship'),
+      // ),
       body: Stack(
         children: [
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 48, 16, 0),
+                    child:
+                    HeaderComponent()
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const BackButton(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 60),  // adjust the left padding as needed
+                      child: Text(
+                        state.isEditing ? 'Edit Internship' : 'Add Internship',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[900],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+
                 if (state.error != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),

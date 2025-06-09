@@ -19,9 +19,9 @@ class CategoryDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const LinearProgressIndicator();
-    }
+    // if (isLoading) {
+    //   return const LinearProgressIndicator();
+    // }
 
     return DropdownButtonFormField<int>(
       value: selectedCategoryId,
