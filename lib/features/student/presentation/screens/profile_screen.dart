@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../domain/entities/user_profile.dart';
 import '../providers/profile_provider.dart';
-import '../widgets/profile_form.dart'; 
+import '../widgets/profile_form.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -34,8 +35,7 @@ class ProfileScreen extends ConsumerWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Profile deleted")),
                 );
-                // Optionally, navigate back or to login/home screen
-                Navigator.pop(context);
+                context.go('/login');
               },
             ),
           );
