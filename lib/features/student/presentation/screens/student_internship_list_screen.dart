@@ -37,12 +37,23 @@ class _StudentInternshipListScreenState // Corrected state class name
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(internshipListProvider.notifier).loadInternships(),
+            onPressed: () =>
+                ref.read(internshipListProvider.notifier).loadInternships(),
           ),
         ],
       ),
       body: _buildBody(state, theme),
-      bottomNavigationBar:  BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 0) {
+            // context.go('/student'); // You can optionally define a student dashboard/home route
+          } else if (index == 1) {
+            // Already on internship list, do nothing
+          } else if (index == 2) {
+            context.go('/student/profile'); // ✅ Navigate to profile
+          }
+        },
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Internships'),
@@ -70,7 +81,8 @@ class _StudentInternshipListScreenState // Corrected state class name
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.read(internshipListProvider.notifier).loadInternships(),
+              onPressed: () =>
+                  ref.read(internshipListProvider.notifier).loadInternships(),
               child: const Text('Retry'),
             ),
           ],
