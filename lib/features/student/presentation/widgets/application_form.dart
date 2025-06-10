@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:internlink_flutter_application/core/utils/file_picker_helper.dart';
-import 'package:internlink_flutter_application/core/widgets/custom_button.dart';
+
+import '../../../../core/utils/FilePickerHelper.dart';
 import '../providers/application_provider.dart';
 import 'custom_text_field.dart';
 
