@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internlink_flutter_application/features/admin/presenation/screens/add_internship_screen.dart';
+import 'package:internlink_flutter_application/features/student/presentation/screens/profile_screen.dart';
 import 'package:internlink_flutter_application/features/student/presentation/screens/student_internship_list_screen.dart';
 import 'core/utils/secure_storage.dart';
 import 'features/admin/admin_dashboard.dart';
@@ -127,16 +128,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      GoRoute(
+ GoRoute(
         path: '/student',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
           child: const StudentInternshipListScreen(),
-          // child: const ApplicationsScreen() debugging
         ),
         routes: [
           GoRoute(
-            path: 'applications/:internshipId', // Changed from 'applications/create/:internshipId'
+            path: 'applications/:internshipId',
             pageBuilder: (context, state) {
               final internshipId = state.pathParameters['internshipId'];
               if (internshipId == null || int.tryParse(internshipId) == null) {
@@ -155,8 +155,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               );
             },
           ),
+          GoRoute(
+            path: 'profile',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const ProfileScreen(),
+            ),
+          ),
         ],
       ),
+
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
