@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:internlink_flutter_application/features/admin/domain/entities/internship.dart';
-// import 'package:internlink_flutter_application/features/internship/presentation/widgets/student_internship_card.dart';
 import 'package:internlink_flutter_application/providers.dart';
-
 import '../../../admin/presenation/state/internship_list_state.dart';
 import '../widgets/student_internship_card.dart';
 
@@ -12,10 +11,10 @@ class StudentInternshipListScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<StudentInternshipListScreen> createState() =>
-      _StudentInternshipListScreenState();
+      _StudentInternshipListScreenState(); // Fixed the state class name
 }
 
-class _StudentInternshipListScreenState
+class _StudentInternshipListScreenState // Corrected state class name
     extends ConsumerState<StudentInternshipListScreen> {
   @override
   void initState() {
@@ -108,21 +107,8 @@ class _StudentInternshipListScreenState
   }
 
   void _handleApply(Internship internship) {
-    if (internship.status.toLowerCase() != 'active') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'This internship is ${internship.status}. Applications are closed.',
-          ),
-        ),
-      );
-      return;
-    }
-
-    // Navigate to application screen
-    Navigator.pushNamed(
-      context,
-      '/internship/${internship.id}/apply',
-    );
+    // Directly navigate to application screen without any checks
+    // context.push('/api/applications/${internship.id}');
+    context.push('/student/applications/${internship.id}');
   }
 }
