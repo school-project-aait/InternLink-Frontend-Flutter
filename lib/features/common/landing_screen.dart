@@ -15,11 +15,15 @@ class LandingPage extends StatelessWidget {
               top: 16,
               left: 16,
               child: RichText(
-                text: const TextSpan(
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                text: TextSpan(
+                  style: const TextStyle(
+                    fontSize: 30, // Increased from 24
+                    fontWeight: FontWeight.bold,
+                    height: 1.2, // Better line spacing
+                  ),
                   children: [
-                    TextSpan(text: 'Intern', style: TextStyle(color: Colors.blue)),
-                    TextSpan(text: 'Link', style: TextStyle(color: Colors.black)),
+                    TextSpan(text: 'Intern', style: TextStyle(color: Colors.blue[900])),
+                    const TextSpan(text: 'Link', style: TextStyle(color: Colors.blue)),
                   ],
                 ),
               ),
@@ -30,15 +34,19 @@ class LandingPage extends StatelessWidget {
               top: 16,
               right: 16,
               child: ElevatedButton(
-                onPressed: () {
-                  context.go('/waiting?next=login');
-                  Future.delayed(const Duration(seconds: 2), () {
-                    context.go('/waiting', extra: '/login');
-                  });
-                },
+                onPressed: () => context.go('/login'), // Direct navigation
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12, // Increased vertical padding
+                  ),
+                  minimumSize: const Size(100, 50), // Minimum width & height
+                  textStyle: const TextStyle(
+                    fontSize: 18, // Increased font size
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 child: const Text('Login'),
               ),
@@ -69,16 +77,16 @@ class LandingPage extends StatelessWidget {
 
                   // Get Started Button
                   ElevatedButton(
-                    onPressed: () {
-                      context.go('/waiting?next=signup');
-                      Future.delayed(const Duration(seconds: 2), () {
-                        context.go('/waiting', extra: '/signup');
-                      });
-                    },
+                    onPressed: () => context.go('/signup'), // Direct navigation
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10), // Increased padding
+                      minimumSize: const Size(200, 60), // Minimum width & height
+                      textStyle: const TextStyle(
+                        fontSize: 20, // Larger font size
+                        fontWeight: FontWeight.bold, // Bolder text
+                      ),
                     ),
                     child: const Text('Get Started'),
                   ),
