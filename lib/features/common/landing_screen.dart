@@ -70,11 +70,15 @@ class LandingPage extends StatelessWidget {
                   // Get Started Button
                   ElevatedButton(
                     onPressed: () {
-                      context.go('/waiting?next=signup');
-                      Future.delayed(const Duration(seconds: 2), () {
-                        context.go('/waiting', extra: '/signup');
-                      });
+                      context.go('/signup');
                     },
+
+                    // onPressed: () {
+                    //   context.go('/waiting?next=signup');
+                    //   Future.delayed(const Duration(seconds: 2), () {
+                    //     context.go('/waiting', extra: '/signup');
+                    //   });
+                    // },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
