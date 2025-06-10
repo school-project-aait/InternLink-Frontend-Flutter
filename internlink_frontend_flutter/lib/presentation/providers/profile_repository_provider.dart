@@ -10,9 +10,7 @@ import '../../../domain/usecases/delete_profile.dart';
 /// Base provider for the ProfileRepository
 final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   final remoteDataSource = ProfileRemoteDataSource(
-    Dio(
-      BaseOptions(baseUrl: "http://localhost:8000"),
-    ), // Adjust base URL if needed
+    Dio(BaseOptions(baseUrl: "http://10.0.2.2:3000/api")),
   );
   return ProfileRepositoryImpl(remoteDataSource);
 });

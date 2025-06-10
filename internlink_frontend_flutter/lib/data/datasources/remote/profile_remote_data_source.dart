@@ -7,16 +7,16 @@ class ProfileRemoteDataSource {
   ProfileRemoteDataSource(this.dio);
 
   Future<ProfileDto> getProfile() async {
-    final res = await dio.get('/profile');
+    final res = await dio.get('/users/profile');
     return ProfileDto.fromJson(res.data);
   }
 
   Future<ProfileDto> updateProfile(int id, ProfileDto dto) async {
-    final res = await dio.put('/profile/$id', data: dto.toJson());
+    final res = await dio.put('/users/$id', data: dto.toJson());
     return ProfileDto.fromJson(res.data);
   }
 
   Future<void> deleteProfile(int id) async {
-    await dio.delete('/profile/$id');
+    await dio.delete('/users/$id');
   }
 }
