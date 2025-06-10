@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internlink_flutter_application/features/admin/domain/entities/internship.dart';
+import 'package:internlink_flutter_application/features/admin/presenation/widgets/header_component.dart';
 import 'package:internlink_flutter_application/providers.dart';
 import '../../../admin/presenation/state/internship_list_state.dart';
 import '../widgets/student_internship_card.dart';
@@ -31,30 +32,53 @@ class _StudentInternshipListScreenState // Corrected state class name
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Available Internships'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                ref.read(internshipListProvider.notifier).loadInternships(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: const EdgeInsets.fromLTRB(16, 48, 16, 0),
+              child:
+              HeaderComponent()
+          ), // ✅ Your custom header widget
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Spacer(),
+                Text(
+                  'Available Internships',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900],
+                  ),
+                ),
+                Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () => ref
+                      .read(internshipListProvider.notifier)
+                      .loadInternships(),
+                ),
+              ],
+            ),
           ),
+          Expanded(child: _buildBody(state, theme)), // Internships list
         ],
       ),
-      body: _buildBody(state, theme),
+      // body: _buildBody(state, theme),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
         onTap: (index) {
           if (index == 0) {
-            // context.go('/student'); // You can optionally define a student dashboard/home route
+            context.go('/student/applications'); // ✅ Navigate to applications screen
           } else if (index == 1) {
             // Already on internship list, do nothing
           } else if (index == 2) {
             context.go('/student/profile'); // ✅ Navigate to profile
           }
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Internships'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),

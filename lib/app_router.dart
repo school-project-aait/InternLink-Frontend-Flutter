@@ -13,6 +13,7 @@ import 'features/admin/presenation/screens/status_determiner_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/signup_screen.dart';
 import 'features/student/presentation/screens/apply_internship_screen.dart';
+import 'features/student/presentation/screens/student_dashboard.dart';
 
 
 final appInitializedProvider = StateProvider<bool>((ref) => false);
@@ -154,6 +155,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
               );
             },
+          ),
+          GoRoute(
+            path: 'applications',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const ApplicationsScreen(),
+            ),
           ),
           GoRoute(
             path: 'profile',
