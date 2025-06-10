@@ -4,7 +4,7 @@ class ProfileDto {
   final int id;
   final String name;
   final String email;
-  final String? phone, address, birthDate, gender;
+  final String? phone, address, gender;
 
   ProfileDto({
     required this.id,
@@ -12,7 +12,6 @@ class ProfileDto {
     required this.email,
     this.phone,
     this.address,
-    this.birthDate,
     this.gender,
   });
 
@@ -22,7 +21,6 @@ class ProfileDto {
         email: json['email'],
         phone: json['phone'],
         address: json['address'],
-        birthDate: json['birthDate'],
         gender: json['gender'],
       );
 
@@ -31,7 +29,6 @@ class ProfileDto {
         'email': email,
         'phone': phone,
         'address': address,
-        'birthDate': birthDate,
         'gender': gender,
       };
 
@@ -41,16 +38,15 @@ class ProfileDto {
         email: email,
         phone: phone,
         address: address,
-        birthDate: birthDate,
         gender: gender,
       );
 
   static ProfileDto fromEntity(UserProfile profile) => ProfileDto(
-      id: profile.id,
-      name: profile.name,
-      email: profile.email,
-      phone: profile.phone,
-      address: profile.address,
-      birthDate: profile.birthDate,
-      gender: profile.gender);
+        id: profile.id,
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+        address: profile.address,
+        gender: profile.gender,
+      );
 }
