@@ -11,5 +11,9 @@ class UserProfile {
     this.phone,
     this.address,
     this.gender,
-  });
+  }) {
+    if (id == null) throw ArgumentError("Profile ID cannot be null");
+    if (name.isEmpty) throw ArgumentError("Name cannot be empty");
+    if (email.isEmpty) throw ArgumentError("Email cannot be empty");
+  }
 }

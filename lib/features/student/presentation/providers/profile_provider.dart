@@ -28,6 +28,7 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   final UpdateProfile updateProfile;
   final DeleteProfile deleteProfile;
 
+
   ProfileNotifier(this.getProfile, this.updateProfile, this.deleteProfile)
       : super(const AsyncValue.loading()) {
     loadProfile();
@@ -48,8 +49,10 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
     try {
       final result = await updateProfile(updatedProfile);
       state = AsyncValue.data(result);
+      // No error thrown here - let the screen handle navigation
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+      rethrow; // Re-throw to let the UI handle it
     }
   }
 

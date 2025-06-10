@@ -16,13 +16,13 @@ class ProfileDto {
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) => ProfileDto(
-        id: json['id'],
-        name: json['name'],
-        email: json['email'],
-        phone: json['phone'],
-        address: json['address'],
-        gender: json['gender'],
-      );
+    id: json['id'] as int? ?? 0, // Provide default if null
+    name: json['name'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    phone: json['phone'] as String?,
+    address: json['address'] as String?,
+    gender: json['gender'] as String?,
+  );
 
   Map<String, dynamic> toJson() => {
         'name': name,
