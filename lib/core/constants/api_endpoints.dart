@@ -6,6 +6,12 @@ class ApiEndpoints {
   static const String editInternship = '/internships'; // PUT
   static const String getDropdownData = '/internships/dropdown-data';
 
+  static const String createApplication = '/applications';
+  static const String getUserApplications = '/applications';
+  static const String getSingleApplication = '/applications';
+  static const String updateApplication = '/applications';
+  static const String deleteApplication = '/applications';
+
   static String editInternshipRoute(int id) => '$editInternship/$id'; // Correct: becomes '/internships/:id'
   static const String getApplications = '/applications'; // GET all applications
 
