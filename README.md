@@ -86,4 +86,4 @@ flutter pub get
 flutter run
 ```
 
-## Make sure your emulator or device is running and your backend API URL is correctly set in your Flutter code (e.g., using baseUrl in your dio config).
+### Make sure your emulator or device is running and your backend API URL is correctly set in your Flutter code (e.g., using baseUrl in your dio config).
