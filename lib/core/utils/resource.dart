@@ -1,31 +1,36 @@
 sealed class Resource<T> {
   const Resource();
 
-  // Add this method to enable pattern matching
-  Object? when<R>({
+  /// Pattern matching utility for handling success, error, and loading states.
+  R when<R>({
     required R Function(T data) success,
     required R Function(String message, Object? error) error,
     required R Function() loading,
   }) {
-    return switch (this) {
-      ResourceSuccess<T>(:final data) => success(data),
-      ResourceError<T>(:final message, :final error) => error!,
-      ResourceLoading<T>() => loading(),
-    };
+    if (this is ResourceSuccess<T>) {
+      return success((this as ResourceSuccess<T>).data);
+    } else if (this is ResourceError<T>) {
+      final err = this as ResourceError<T>;
+      return error(err.message, err.error);
+    } else if (this is ResourceLoading<T>) {
+      return loading();
+    } else {
+      throw Exception('Unhandled Resource type: $this');
+    }
   }
 }
 
-class ResourceSuccess<T> extends Resource<T> {
+final class ResourceSuccess<T> extends Resource<T> {
   final T data;
   const ResourceSuccess(this.data);
 }
 
-class ResourceError<T> extends Resource<T> {
+final class ResourceError<T> extends Resource<T> {
   final String message;
   final Object? error;
   const ResourceError(this.message, [this.error]);
 }
 
-class ResourceLoading<T> extends Resource<T> {
+final class ResourceLoading<T> extends Resource<T> {
   const ResourceLoading();
 }
