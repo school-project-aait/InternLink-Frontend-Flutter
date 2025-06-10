@@ -11,7 +11,8 @@ import 'features/admin/presenation/screens/admin_dashboard.dart';
 import 'features/admin/presenation/screens/status_determiner_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/signup_screen.dart';
-import 'features/student/student_dashboard.dart';
+import 'features/student/presentation/screens/apply_internship_screen.dart';
+
 
 final appInitializedProvider = StateProvider<bool>((ref) => false);
 
@@ -130,8 +131,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/student',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child:  StudentInternshipListScreen(),
+          child: const StudentInternshipListScreen(),
+          // child: const ApplicationsScreen() debugging
         ),
+        routes: [
+          GoRoute(
+            path: 'applications/:internshipId', // Changed from 'applications/create/:internshipId'
+            pageBuilder: (context, state) {
+              final internshipId = state.pathParameters['internshipId'];
+              if (internshipId == null || int.tryParse(internshipId) == null) {
+                return MaterialPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    body: Center(child: Text('Invalid internship ID')),
+                  ),
+                );
+              }
+              return MaterialPage(
+                key: state.pageKey,
+                child: CreateApplicationScreen(
+                  internshipId: int.parse(internshipId),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
