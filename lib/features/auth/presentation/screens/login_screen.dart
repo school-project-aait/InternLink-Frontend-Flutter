@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
+  LoginScreen({super.key});
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,12 +24,11 @@ class LoginScreen extends ConsumerWidget {
     );
 
     ref.listen(authProvider, (previous, next) {
-      next.maybeWhen(
+      next?.maybeWhen(
         authenticated: (user) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful')),
           );
-          print('User logged in: ${user.toString()}');
           if (context.mounted) {
             context.go('/');
           }
@@ -45,29 +44,36 @@ class LoginScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Logo and app title
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Text("Intern", style: TextStyle(fontSize: 40, color: Color(0xFF1B2A80))),
-                  Text("Link", style: TextStyle(fontSize: 40, color: Color(0xFF2196F3))),
+                  Text("Intern",
+                      key: Key('login_logo_intern'),
+                      style: TextStyle(fontSize: 40, color: Color(0xFF1B2A80))),
+                  Text("Link",
+                      key: Key('login_logo_link'),
+                      style: TextStyle(fontSize: 40, color: Color(0xFF2196F3))),
                 ],
               ),
               const SizedBox(height: 20),
-              const Text("Login", style: TextStyle(fontSize: 35, color: Colors.blue)),
-              const Text("Please login to continue", style: TextStyle(fontSize: 18)),
+              const Text("Login",
+                  key: Key('login_title'),
+                  style: TextStyle(fontSize: 35, color: Colors.blue)),
+              const Text("Please login to continue",
+                  key: Key('login_subtitle'), style: TextStyle(fontSize: 18)),
               const SizedBox(height: 30),
 
               if (errorMessage != null) ...[
                 Text(
                   errorMessage,
+                  key: const Key('login_error_message'),
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
               ],
 
-              // Email input
               TextField(
+                key: const Key('login_email_field'),
                 controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Enter email',
@@ -77,8 +83,8 @@ class LoginScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              // Password input
               TextField(
+                key: const Key('login_password_field'),
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -88,11 +94,11 @@ class LoginScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              // Login button
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
+                  key: const Key('login_button'),
                   onPressed: isLoading ? null : () => _login(ref),
                   child: isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
@@ -102,13 +108,13 @@ class LoginScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
-              // Sign up prompt
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?", style: TextStyle(fontSize: 18)),
+                  const Text("Don't have an account?", key: Key('login_no_account_text'), style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 4),
                   GestureDetector(
+                    key: const Key('go_to_signup_button'),
                     onTap: () => context.go('/signup'),
                     child: const Text(
                       "Sign Up",
@@ -131,7 +137,8 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  // @override
+
+// @override
   // Widget build(BuildContext context, WidgetRef ref) {
   //   final authState = ref.watch(authProvider);
   //
