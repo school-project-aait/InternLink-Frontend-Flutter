@@ -4,7 +4,7 @@ class ProfileDto {
   final int id;
   final String name;
   final String email;
-  final String? phone, address, birthDate;
+  final String? phone, address, birthDate, gender;
 
   ProfileDto({
     required this.id,
@@ -13,6 +13,7 @@ class ProfileDto {
     this.phone,
     this.address,
     this.birthDate,
+    this.gender,
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) => ProfileDto(
@@ -22,6 +23,7 @@ class ProfileDto {
     phone: json['phone'],
     address: json['address'],
     birthDate: json['birthDate'],
+    gender: json['gender'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +32,7 @@ class ProfileDto {
     'phone': phone,
     'address': address,
     'birthDate': birthDate,
+    'gender': gender,
   };
 
   UserProfile toEntity() => UserProfile(
@@ -39,6 +42,7 @@ class ProfileDto {
     phone: phone,
     address: address,
     birthDate: birthDate,
+    gender: gender,
   );
 
   static ProfileDto fromEntity(UserProfile profile) => ProfileDto(
@@ -48,5 +52,6 @@ class ProfileDto {
     phone: profile.phone,
     address: profile.address,
     birthDate: profile.birthDate,
+    gender: profile.gender
   );
 }

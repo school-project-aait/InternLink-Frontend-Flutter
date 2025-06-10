@@ -43,7 +43,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 email: emailController.text,
                 phone: widget.profile.phone,
                 address: widget.profile.address,
-                birthDate: widget.profile.birthDate,
+                gender: widget.profile.gender,
               ),
             );
           },

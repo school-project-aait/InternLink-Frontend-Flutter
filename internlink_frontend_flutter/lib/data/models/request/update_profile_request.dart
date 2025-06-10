@@ -1,13 +1,13 @@
 class UpdateProfileRequest {
   final String name, email;
-  final String? phone, address, birthDate;
+  final String? phone, address, gender;
 
   UpdateProfileRequest({
     required this.name,
     required this.email,
     this.phone,
     this.address,
-    this.birthDate,
+    this.gender,
   });
 
   Map<String, dynamic> toJson() => {
@@ -15,6 +15,6 @@ class UpdateProfileRequest {
     'email': email,
     'phone': phone,
     'address': address,
-    'birthDate': birthDate,
+    'gender': gender,
   };
 }

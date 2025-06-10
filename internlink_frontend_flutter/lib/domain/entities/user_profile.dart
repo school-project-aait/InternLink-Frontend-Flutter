@@ -2,7 +2,7 @@ class UserProfile {
   final int id;
   final String name;
   final String email;
-  final String? phone, address, birthDate;
+  final String? phone, address, birthDate, gender;
 
   UserProfile({
     required this.id,
@@ -10,6 +10,7 @@ class UserProfile {
     required this.email,
     this.phone,
     this.address,
-    this.birthDate,
+    this.birthDate, 
+    this.gender
   });
 }

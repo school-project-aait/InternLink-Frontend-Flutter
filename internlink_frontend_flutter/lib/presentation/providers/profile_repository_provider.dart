@@ -10,7 +10,15 @@ import '../../../domain/usecases/delete_profile.dart';
 /// Base provider for the ProfileRepository
 final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   final remoteDataSource = ProfileRemoteDataSource(
-    Dio(BaseOptions(baseUrl: "http://10.0.2.2:3000/api")),
+    Dio(
+      BaseOptions(
+        baseUrl: "http://10.0.2.2:3000/api",
+        headers: {
+          "Authorization":
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoiTWVycm9uLmVtYWlsQGV4YW1wbGUuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3NDk1MzA4NjIsImV4cCI6MTc0OTUzNDQ2Mn0.A6wLc5-8RP1f7dKAPFNiZ6mspjU5iNHz0N96O3C32k0", // inject actual token
+        },
+      ),
+    ),
   );
   return ProfileRepositoryImpl(remoteDataSource);
 });
