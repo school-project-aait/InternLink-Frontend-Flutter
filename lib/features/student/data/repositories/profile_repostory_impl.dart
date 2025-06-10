@@ -15,9 +15,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<UserProfile> updateProfile(UserProfile profile) {
+  Future<UserProfile> updateProfile(UserProfile profile) async {
     final dto = ProfileDto.fromEntity(profile);
-    return remote.updateProfile(profile.id, dto).then((res) => res.toEntity());
+    final updatedDto = await remote.updateProfile(profile.id, dto);
+    return updatedDto.toEntity();
   }
 
   @override
