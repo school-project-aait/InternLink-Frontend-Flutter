@@ -12,6 +12,11 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(profileProvider);
     final profileNotifier = ref.read(profileProvider.notifier);
+    if (profileAsync.asData?.value == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        profileNotifier.loadProfile(); // force reload
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text("My Profile")),
@@ -29,13 +34,17 @@ class ProfileScreen extends ConsumerWidget {
               profile: profile,
               onSave: (updatedProfile) {
                 profileNotifier.update(updatedProfile);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Profile updated")),
+                );
+                context.go('/student/applications');
               },
               onDelete: () {
                 profileNotifier.delete();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Profile deleted")),
                 );
-                context.go('/login');
+                context.go('/');
               },
             ),
           );
