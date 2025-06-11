@@ -83,12 +83,12 @@ class StatusDeterminerScreen extends ConsumerWidget {
                         itemCount: uiState.students.length,
                         itemBuilder: (context, index) {
                           final student = uiState.students[index];
-                          return StudentStatusRow(
-                            student: student,
-                            onStatusChange: (newStatus) {
-                              ref.read(studentStatusProvider.notifier).updateStatus(student.id, newStatus);
-                            },
-                          );
+                          // return StudentStatusRow(
+                          //   student: student,
+                          //   onStatusChange: (newStatus) {
+                          //     ref.read(studentStatusProvider.notifier).updateStatus(student.id, newStatus);
+                          //   },
+                          // );
                         },
                       ),
                   ],
