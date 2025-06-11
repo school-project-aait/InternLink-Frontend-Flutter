@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 
@@ -29,7 +30,7 @@ class LandingPage extends StatelessWidget {
               ),
             ),
 
-            // Top Right: Login Button
+            // Top Right: Login Button - navigate to Login_screen
             Positioned(
               top: 16,
               right: 16,
