@@ -104,10 +104,16 @@ class ApplicationCard extends ConsumerWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: onDelete,
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, // white background
+                        side: const BorderSide(color: Color(0xFF1B2A80), width: 2), // blue border stroke
+                        elevation: 0,
                       ),
-                      child: const Text('WITHDRAW'),
+                      child: const Text('WITHDRAW',style: TextStyle(
+                        color: Colors.red, // blue text
+                        fontWeight: FontWeight.bold,
+                      ),
+                      ),
                     ),
                   ),
                 if (application.status == 'pending')
@@ -116,9 +122,16 @@ class ApplicationCard extends ConsumerWidget {
                   child: ElevatedButton(
                     onPressed: onUpdate,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1B2A80),
+                        backgroundColor: Colors.white, // white background
+                        side: const BorderSide(color: Color(0xFF1B2A80), width: 2), // blue border stroke
+                        elevation: 0,
                     ),
-                    child: const Text('UPDATE'),
+                    child: const Text('UPDATE',
+                      style: TextStyle(
+                      color: Color(0xFF1B2A80), // blue text
+                      fontWeight: FontWeight.bold,
+                    ),
+                    ),
                   ),
                 ),
               ],

@@ -12,7 +12,10 @@ import 'features/admin/presenation/screens/admin_dashboard.dart';
 import 'features/admin/presenation/screens/status_determiner_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/signup_screen.dart';
+import 'features/common/landing_screen.dart';
 import 'features/student/presentation/screens/apply_internship_screen.dart';
+import 'features/student/presentation/screens/student_dashboard.dart';
+// import 'features/landing/presentation/screens/landing_page.dart'; // update the path as per your structure
 
 
 final appInitializedProvider = StateProvider<bool>((ref) => false);
@@ -22,38 +25,45 @@ final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(appInitializedProvider);
 
   return GoRouter(
-    initialLocation: '/signup',
+    initialLocation: '/',
     redirect: (context, state) async {
       if (!isInitialized) return null;
-      if (state.uri.path == '/') return '/login';
+      // if (state.uri.path == '/') return '/login';
 
       final token = await secureStorage.getToken();
-      final publicRoutes = ['/login', '/signup'];
-      if (token == null) {
-        // Allow staying on public routes
+      final publicRoutes = ['/','/login', '/signup'];
+      if (token != null) {
+        try {
+          final role = _decodeTokenRole(token);
+          // Redirect away from public routes when authenticated
+          if (publicRoutes.contains(state.uri.path)) {
+            return role == 'admin' ? '/admin' : '/student';
+          }
+          return null;
+        } catch (e) {
+          await secureStorage.clearToken();
+          return '/';
+        }
+      }
+      // Handle unauthenticated users
+      else {
+        // Allow public routes
         if (publicRoutes.contains(state.uri.path)) {
           return null;
         }
-        return '/login';
+        // Redirect to landing page for private routes
+        return '/';
       }
-      // if (token == null) return '/login';
 
-      try {
-        final role = _decodeTokenRole(token);
-        // Redirect away from public routes when authenticated
-        if (publicRoutes.contains(state.uri.path)) {
-          return role == 'admin' ? '/admin' : '/student';
-        }
-        // if (state.uri.path == '/login' && role != null) {
-        //   return role == 'admin' ? '/admin' : '/student';
-        // }
-        return null;
-      } catch (e) {
-        await secureStorage.clearToken();
-        return '/login';
-      }
     },
     routes: [
+      GoRoute(
+        path: '/',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const LandingPage(),
+        ),
+      ),
       GoRoute(
         path: '/signup',
         pageBuilder: (context, state) => MaterialPage(
@@ -154,6 +164,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
               );
             },
+          ),
+          GoRoute(
+            path: 'applications',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const ApplicationsScreen(),
+            ),
           ),
           GoRoute(
             path: 'profile',

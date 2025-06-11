@@ -51,8 +51,8 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
       state = AsyncValue.data(result);
       // No error thrown here - let the screen handle navigation
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow; // Re-throw to let the UI handle it
+      // state = AsyncValue.error(e, st);
+      // rethrow; // Re-throw to let the UI handle it
     }
   }
 

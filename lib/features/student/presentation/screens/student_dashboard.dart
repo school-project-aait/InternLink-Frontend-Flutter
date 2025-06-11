@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/resource.dart';
+import '../../../admin/presenation/widgets/header_component.dart';
 import '../../domain/entities/application.dart';
 
 import '../providers/application_list_provider.dart';
@@ -34,20 +35,70 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
     final notifier = ref.read(applicationListProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Applications'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => notifier.refresh(),
-            tooltip: 'Refresh applications',
-          ),
-        ],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(16, 48, 16, 0),
+                child:
+                HeaderComponent()
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'My Applications',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo,
+                    ),
+                  ),
+                  Spacer(),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0, bottom: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () => notifier.refresh(),
+                        tooltip: 'Refresh applications',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Refresh Icon Below Header
+
+            // Body content (List/Error/Loading)
+            Expanded(child: _buildBody(state, notifier)),
+          ],
+        ),
+
       ),
-      body: _buildBody(state, notifier),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToInternshipList(context),
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0, // Applications screen
+        onTap: (index) {
+          if (index == 0) {
+            // Already on Applications screen
+          } else if (index == 1) {
+            context.go('/student'); // 🔁 Navigate to internships screen
+          } else if (index == 2) {
+            context.go('/student/profile'); // 🔁 Navigate to profile screen
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Internships'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
       ),
     );
   }
