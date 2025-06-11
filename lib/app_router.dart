@@ -25,13 +25,13 @@ final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(appInitializedProvider);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/',   // Allow access to landing page
     redirect: (context, state) async {
       if (!isInitialized) return null;
       // if (state.uri.path == '/') return '/login';
 
       final token = await secureStorage.getToken();
-      final publicRoutes = ['/','/login', '/signup'];
+      final publicRoutes = ['/','/login', '/signup']; // include '/' in publicRoutes
       if (token != null) {
         try {
           final role = _decodeTokenRole(token);
